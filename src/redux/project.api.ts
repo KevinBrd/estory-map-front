@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CreateProjectDto, Project } from "../types";
+import { Actor, CreateActorDto, CreateProjectDto, DeleteProjectDto, Project, UpdateProjectDto } from "../types";
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
@@ -8,9 +8,9 @@ export const projectApi = createApi({
         getProjects: builder.query<Project[], void>({
             query: () => `projects`,
         }),
-        deleteProject: builder.mutation<void, string>({
-            query: (id) => ({
-                url: `projects/${id}`,
+        deleteProject: builder.mutation<void, DeleteProjectDto>({
+            query: (dto) => ({
+                url: `projects/${dto.id}`,
                 method: "DELETE",
             }),
         }),
@@ -21,10 +21,20 @@ export const projectApi = createApi({
                 body: project,
             }),
         }),
-        updateProject: builder.mutation<void, Project>({
+        updateProject: builder.mutation<void, UpdateProjectDto>({
             query: (project) => ({
                 url: `projects/${project.id}`,
                 method: "PUT",
+                body: project,
+            }),
+        }),
+        getActors: builder.query<Actor[], void>({
+            query: () => `actors`,
+        }),
+        addActor: builder.mutation<void, CreateActorDto>({
+            query: (project) => ({
+                url: `actors`,
+                method: "POST",
                 body: project,
             }),
         }),
@@ -36,4 +46,7 @@ export const {
     useDeleteProjectMutation,
     useUpdateProjectMutation,
     useGetProjectsQuery,
+
+    useGetActorsQuery,
+    useAddActorMutation
 } = projectApi;

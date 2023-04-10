@@ -1,13 +1,23 @@
 export type CreateProjectDto = {
-    id: number;
     userId: number;
     name: string;
     description: string;
     mail_client?: string;
 };
 
+export type DeleteProjectDto = {
+    id: number
+};
+
+export type UpdateProjectDto = Omit<Project, "userId">
+
 export type Actor = {
     id: number;
+    nom_role: string;
+    attributs?: { [key: string]: any }[];
+};
+
+export type CreateActorDto = {
     nom_role: string;
     attributs?: { [key: string]: any }[];
 };
