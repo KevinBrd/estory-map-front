@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { useGetActorsQuery, useUpdateProjectMutation } from "../redux/project.api";
-import { Actor, Project } from "../types";
+import { useNavigate } from "react-router-dom";
+import { useGetActorsQuery, useGetExigencesQuery, useGetFluxQuery, useGetReglesQuery, useUpdateProjectMutation } from "../redux/project.api";
+import { Actor, Exigence, Flux, Project, Regle } from "../types";
 
 interface Props {
-    showAddPopup: (show: boolean) => void,
+    showUpdatePopup: (project: Project | undefined) => void,
     showAddActorPopup: (show: boolean) => void,
+    showAddExigencePopup: (show: boolean) => void,
+    showAddFluxPopup: (show: boolean) => void,
+    showAddReglePopup: (show: boolean) => void,
     project: Project
 }
 
@@ -12,17 +16,22 @@ const UpdateProjectPopup = (props: Props) => {
     const { project } = props;
 
     const { data: globalActors, error, isLoading } = useGetActorsQuery()
+    const { data: globalFlux, error: errorFlux, isLoading: isLoadingFlux } = useGetFluxQuery()
+    const { data: globalExigences, error: errorExigences, isLoading: isLoadingExigences } = useGetExigencesQuery()
+    const { data: globalRegles, error: errorRegles, isLoading: isLoadingRegles } = useGetReglesQuery()
 
     const [name, setName] = useState(project.name);
     const [description, setDescription] = useState(project.description);
     const [clientMail, setClientMail] = useState(project.mailClient);
-    const [actors, setActors] = useState(project.actors);
-    const [fluxs, setFlux] = useState(project.fluxs);
-    const [regles, setRegles] = useState(project.regles);
-    const [exigences, setExigences] = useState(project.exigences);
+    const [actors, setActors] = useState(project.actors ?? []);
+    const [fluxs, setFlux] = useState(project.fluxs ?? []);
+    const [regles, setRegles] = useState(project.regles ?? []);
+    const [exigences, setExigences] = useState(project.exigences ?? []);
+
+    const navigate = useNavigate();
 
     const [updateProject, { isLoading: isAdding }] = useUpdateProjectMutation()
-    const { showAddPopup, showAddActorPopup } = props;
+    const { showUpdatePopup, showAddActorPopup, showAddReglePopup, showAddExigencePopup, showAddFluxPopup } = props;
 
     const submit = () => {
         updateProject({
@@ -35,6 +44,7 @@ const UpdateProjectPopup = (props: Props) => {
             regles: regles,
             exigences: exigences
         })
+        navigate(0);
     }
 
     return (
@@ -89,7 +99,7 @@ const UpdateProjectPopup = (props: Props) => {
                                 <div className="w-full lg:w-12/12 px-4">
                                     <div className="flex my-2">
                                         <button onClick={() => showAddActorPopup(true)} className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter un acteur</button>
-                                    </div>                                        
+                                    </div>
                                     <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
                                         {globalActors?.map((actor: Actor) => (
                                             <div className="flex space-x-2 w-full">
@@ -114,17 +124,20 @@ const UpdateProjectPopup = (props: Props) => {
                                 <div className="w-full lg:w-12/12 px-4">
                                     <div className="flex my-2">
                                         <button className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter un flux</button>
-                                    </div>                                        <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
-                                        <div className="flex space-x-2 w-full">
-                                            <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
-                                            <label className="flex justify-between w-full">
-                                                <span>Michael Jordan</span>
-                                                <div className="flex space-x-2">
-                                                    <span>Edit</span>
-                                                    <span>Supprimer</span>
-                                                </div>
-                                            </label>
-                                        </div>
+                                    </div>
+                                    <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
+                                        {globalFlux?.map((flux: Flux) => (
+                                            <div className="flex space-x-2 w-full">
+                                                <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
+                                                <label className="flex justify-between w-full">
+                                                    <span>{flux.nom_flux}</span>
+                                                    <div className="flex space-x-2">
+                                                        <span>Edit</span>
+                                                        <span>Supprimer</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        ))}
                                     </fieldset>
                                 </div>
                             </div>
@@ -135,18 +148,29 @@ const UpdateProjectPopup = (props: Props) => {
                             <div className="flex flex-wrap w-full">
                                 <div className="w-full lg:w-12/12 px-4">
                                     <div className="flex my-2">
-                                        <button className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter une règle</button>
-                                    </div>                                        <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
-                                        <div className="flex space-x-2 w-full">
-                                            <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
-                                            <label className="flex justify-between w-full">
-                                                <span>Michael Jordan</span>
-                                                <div className="flex space-x-2">
-                                                    <span>Edit</span>
-                                                    <span>Supprimer</span>
-                                                </div>
-                                            </label>
-                                        </div>
+                                        <button onClick={() => showAddReglePopup(true)} className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter une règle</button>
+                                    </div>
+                                    <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
+                                        {globalRegles?.map((regle: Regle) => (
+                                            <div className="flex space-x-2 w-full">
+                                                <input type="checkbox" value={regle.id} checked={!!regles.find(enabledRegle => enabledRegle.id === regle.id)} onChange={(e) => {
+                                                    if (!regles.find(enabledRegle => enabledRegle.id === regle.id)) {
+                                                        setRegles([...regles, regle])
+                                                    } else {
+                                                        const newRegles = [...regles];
+                                                        newRegles.splice(regles.findIndex(enabledRegle => enabledRegle.id === regle.id), 1)
+                                                        setRegles(newRegles)
+                                                    }
+                                                }} className="" />
+                                                <label className="flex justify-between w-full">
+                                                    <span>{regle.description}</span>
+                                                    <div className="flex space-x-2">
+                                                        <span>Edit</span>
+                                                        <span>Supprimer</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        ))}
                                     </fieldset>
                                 </div>
                             </div>
@@ -157,24 +181,35 @@ const UpdateProjectPopup = (props: Props) => {
                             <div className="flex flex-wrap w-full">
                                 <div className="w-full lg:w-12/12 px-4">
                                     <div className="flex my-2">
-                                        <button onClick={() => submit()} className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter une exigence</button>
-                                    </div>                                        <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
-                                        <div className="flex space-x-2 w-full">
-                                            <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
-                                            <label className="flex justify-between w-full">
-                                                <span>Michael Jordan</span>
-                                                <div className="flex space-x-2">
-                                                    <span>Edit</span>
-                                                    <span>Supprimer</span>
-                                                </div>
-                                            </label>
-                                        </div>
+                                        <button onClick={() => showAddExigencePopup(true)} className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter une exigence</button>
+                                    </div>
+                                    <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
+                                        {globalExigences?.map((exigence: Exigence) => (
+                                            <div className="flex space-x-2 w-full">
+                                                <input type="checkbox" value={exigence.id} checked={!!exigences.find(enabledExigence => enabledExigence.id === exigence.id)} onChange={(e) => {
+                                                    if (!exigences.find(enabledExigence => enabledExigence.id === exigence.id)) {
+                                                        setExigences([...exigences, exigence])
+                                                    } else {
+                                                        const newExigences = [...exigences];
+                                                        newExigences.splice(exigences.findIndex(enabledExigence => enabledExigence.id === exigence.id), 1)
+                                                        setExigences(newExigences)
+                                                    }
+                                                }} className="" />
+                                                <label className="flex justify-between w-full">
+                                                    <span>{exigence.type} : {exigence.description}</span>
+                                                    <div className="flex space-x-2">
+                                                        <span>Edit</span>
+                                                        <span>Supprimer</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        ))}
                                     </fieldset>
                                 </div>
                             </div>
                             <div className="flex w-full justify-between">
                                 <div className="flex mt-6">
-                                    <button onClick={() => showAddPopup(false)} className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Quit</button>
+                                    <button onClick={() => showUpdatePopup(undefined)} className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Quit</button>
                                 </div>
                                 <div className="flex mt-6">
                                     <button onClick={() => submit()} className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Save</button>

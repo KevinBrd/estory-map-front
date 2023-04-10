@@ -22,8 +22,19 @@ export type CreateActorDto = {
     attributs?: { [key: string]: any }[];
 };
 
+export type CreateFluxDto = {
+    nom_flux: string;
+    acteur_emetteur?: number;
+    acteur_recepteur?: number;
+};
+
 export type Exigence = {
     id: number;
+    description: string;
+    type: string;
+};
+
+export type CreateExigenceDto = {
     description: string;
     type: string;
 };
@@ -31,12 +42,16 @@ export type Exigence = {
 export type Flux = {
     id: number;
     nom_flux: string;
-    acteur_emmeteur?: Actor;
+    acteur_emetteur?: Actor;
     acteur_recepteur?: Actor;
 };
 
-export type RegleDeGestion = {
+export type Regle = {
     id: number;
+    description: string;
+};
+
+export type CreateRegleDto = {
     description: string;
 };
 

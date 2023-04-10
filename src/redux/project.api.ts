@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Actor, CreateActorDto, CreateProjectDto, DeleteProjectDto, Project, UpdateProjectDto } from "../types";
+import { Actor, CreateActorDto, CreateExigenceDto, CreateFluxDto, CreateProjectDto, CreateRegleDto, DeleteProjectDto, Exigence, Flux, Project, Regle, UpdateProjectDto } from "../types";
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
@@ -28,6 +28,7 @@ export const projectApi = createApi({
                 body: project,
             }),
         }),
+
         getActors: builder.query<Actor[], void>({
             query: () => `actors`,
         }),
@@ -36,6 +37,39 @@ export const projectApi = createApi({
                 url: `actors`,
                 method: "POST",
                 body: project,
+            }),
+        }),
+
+        getFlux: builder.query<Flux[], void>({
+            query: () => `flux`,
+        }),
+        addFlux: builder.mutation<void, CreateFluxDto>({
+            query: (project) => ({
+                url: `flux`,
+                method: "POST",
+                body: project,
+            }),
+        }),
+
+        getRegles: builder.query<Regle[], void>({
+            query: () => `regles`,
+        }),
+        addRegle: builder.mutation<void, CreateRegleDto>({
+            query: (regle) => ({
+                url: `regles`,
+                method: "POST",
+                body: regle,
+            }),
+        }),
+
+        getExigences: builder.query<Exigence[], void>({
+            query: () => `exigences`,
+        }),
+        addExigence: builder.mutation<void, CreateExigenceDto>({
+            query: (exigence) => ({
+                url: `exigences`,
+                method: "POST",
+                body: exigence,
             }),
         }),
     }),
@@ -48,5 +82,14 @@ export const {
     useGetProjectsQuery,
 
     useGetActorsQuery,
-    useAddActorMutation
+    useAddActorMutation,
+
+    useGetFluxQuery,
+    useAddFluxMutation,
+
+    useGetReglesQuery,
+    useAddRegleMutation,
+
+    useGetExigencesQuery,
+    useAddExigenceMutation
 } = projectApi;
