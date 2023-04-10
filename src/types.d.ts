@@ -1,5 +1,5 @@
 export type CreateProjectDto = {
-    userId: number;
+    userId: string;
     name: string;
     description: string;
     mail_client?: string;

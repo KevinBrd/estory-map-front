@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useAddProjectMutation, useGetActorsQuery } from "../redux/project.api";
 
 interface Props {
-    showAddPopup: (show: boolean) => void
+    showAddPopup: (show: boolean) => void,
+    userId: string
 }
 
 const AddProjectPopup = (props: Props) => {
@@ -14,7 +15,7 @@ const AddProjectPopup = (props: Props) => {
 
     const submit = () => {
         createProject({
-            name, description, mail_client: clientMail, userId: 0
+            name, description, mail_client: clientMail, userId: props.userId
         })
     }
 
