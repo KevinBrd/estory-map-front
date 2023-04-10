@@ -4,15 +4,18 @@ import { Actor, CreateActorDto, CreateExigenceDto, CreateFluxDto, CreateProjectD
 export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_URL }),
+    tagTypes: ['Project', 'Actor', 'Flux', 'Regle', 'Exigence'],
     endpoints: (builder) => ({
         getProjects: builder.query<Project[], void>({
             query: () => `projects`,
+            providesTags: ['Project']
         }),
         deleteProject: builder.mutation<void, DeleteProjectDto>({
             query: (dto) => ({
                 url: `projects/${dto.id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ['Project']
         }),
         addProject: builder.mutation<void, CreateProjectDto>({
             query: (project) => ({
@@ -20,6 +23,7 @@ export const projectApi = createApi({
                 method: "POST",
                 body: project,
             }),
+            invalidatesTags: ['Project']
         }),
         updateProject: builder.mutation<void, UpdateProjectDto>({
             query: (project) => ({
@@ -27,10 +31,12 @@ export const projectApi = createApi({
                 method: "PUT",
                 body: project,
             }),
+            invalidatesTags: ['Project']
         }),
 
         getActors: builder.query<Actor[], void>({
             query: () => `actors`,
+            providesTags: ['Actor']
         }),
         addActor: builder.mutation<void, CreateActorDto>({
             query: (project) => ({
@@ -38,10 +44,12 @@ export const projectApi = createApi({
                 method: "POST",
                 body: project,
             }),
+            invalidatesTags: ['Actor']
         }),
 
         getFlux: builder.query<Flux[], void>({
             query: () => `flux`,
+            providesTags: ['Flux']
         }),
         addFlux: builder.mutation<void, CreateFluxDto>({
             query: (project) => ({
@@ -49,10 +57,12 @@ export const projectApi = createApi({
                 method: "POST",
                 body: project,
             }),
+            invalidatesTags: ['Flux']
         }),
 
         getRegles: builder.query<Regle[], void>({
             query: () => `regles`,
+            providesTags: ['Regle']
         }),
         addRegle: builder.mutation<void, CreateRegleDto>({
             query: (regle) => ({
@@ -60,10 +70,12 @@ export const projectApi = createApi({
                 method: "POST",
                 body: regle,
             }),
+            invalidatesTags: ['Regle']
         }),
 
         getExigences: builder.query<Exigence[], void>({
             query: () => `exigences`,
+            providesTags: ['Exigence']
         }),
         addExigence: builder.mutation<void, CreateExigenceDto>({
             query: (exigence) => ({
@@ -71,6 +83,7 @@ export const projectApi = createApi({
                 method: "POST",
                 body: exigence,
             }),
+            invalidatesTags: ['Exigence']
         }),
     }),
 });

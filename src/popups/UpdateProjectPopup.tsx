@@ -9,7 +9,8 @@ interface Props {
     showAddExigencePopup: (show: boolean) => void,
     showAddFluxPopup: (show: boolean) => void,
     showAddReglePopup: (show: boolean) => void,
-    project: Project
+    project: Project,
+    userId: string
 }
 
 const UpdateProjectPopup = (props: Props) => {
@@ -36,15 +37,16 @@ const UpdateProjectPopup = (props: Props) => {
     const submit = () => {
         updateProject({
             id: project.id,
+            userId: props.userId,
             name: name,
             description: description,
-            mailClient: clientMail,
-            actors: actors,
-            fluxs: fluxs,
-            regles: regles,
-            exigences: exigences
+            mail_client: clientMail,
+            actors: actors.map(actor => actor.id),
+            fluxs: fluxs.map(flux => flux.id),
+            regles: regles.map(regle => regle.id),
+            exigences: exigences.map(exigence => exigence.id)
         })
-        navigate(0);
+        showUpdatePopup(undefined)
     }
 
     return (
@@ -103,8 +105,15 @@ const UpdateProjectPopup = (props: Props) => {
                                     <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
                                         {globalActors?.map((actor: Actor) => (
                                             <div className="flex space-x-2 w-full">
-                                                <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
-                                                <label className="flex justify-between w-full">
+                                                <input type="checkbox" value={actor.id} checked={!!actors.find(enabledActor => enabledActor.id === actor.id)} onChange={(e) => {
+                                                    if (!actors.find(enabledActor => enabledActor.id === actor.id)) {
+                                                        setActors([...actors, actor])
+                                                    } else {
+                                                        const newActors = [...actors];
+                                                        newActors.splice(actors.findIndex(enabledActor => enabledActor.id === actor.id), 1)
+                                                        setActors(newActors)
+                                                    }
+                                                }} className="" />                                                <label className="flex justify-between w-full">
                                                     <span>{actor.nom_role}</span>
                                                     <div className="flex space-x-2">
                                                         <span>Edit</span>
@@ -123,12 +132,20 @@ const UpdateProjectPopup = (props: Props) => {
                             <div className="flex flex-wrap w-full">
                                 <div className="w-full lg:w-12/12 px-4">
                                     <div className="flex my-2">
-                                        <button className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter un flux</button>
+                                        <button onClick={() => showAddFluxPopup(true)} className="px-4 py-1 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Ajouter un flux</button>
                                     </div>
                                     <fieldset className="relative w-full mb-3 bg-white py-2 px-2 w-full">
                                         {globalFlux?.map((flux: Flux) => (
                                             <div className="flex space-x-2 w-full">
-                                                <input type="checkbox" value={"Michael jordan"} onChange={(e) => setDescription(e.target.value)} className="" />
+                                                <input type="checkbox" value={flux.id} checked={!!fluxs.find(enabledFlux => enabledFlux.id === flux.id)} onChange={(e) => {
+                                                    if (!fluxs.find(enabledFlux => enabledFlux.id === flux.id)) {
+                                                        setFlux([...fluxs, flux])
+                                                    } else {
+                                                        const newFluxs = [...fluxs];
+                                                        newFluxs.splice(fluxs.findIndex(enabledFlux => enabledFlux.id === flux.id), 1)
+                                                        setFlux(newFluxs)
+                                                    }
+                                                }} className="" />
                                                 <label className="flex justify-between w-full">
                                                     <span>{flux.nom_flux}</span>
                                                     <div className="flex space-x-2">

@@ -23,7 +23,9 @@ function App() {
     return (
         <div className="relative overflow-x-hidden px-64 flex space-x-4 items-center justify-center w-screen min-h-screen max-w-screen">
             {showAddPopup && <AddProjectPopup userId={userId} showAddPopup={setShowAddPopup} />}
-            {showUpdatePopup && <UpdateProjectPopup project={showUpdatePopup} 
+            {showUpdatePopup && <UpdateProjectPopup 
+                userId={userId}
+                project={showUpdatePopup} 
                 showUpdatePopup={setShowUpdatePopup} 
                 showAddActorPopup={setShowAddActorPopup}
                 showAddFluxPopup={setShowAddFluxPopup}

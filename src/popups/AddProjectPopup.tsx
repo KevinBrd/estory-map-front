@@ -17,6 +17,7 @@ const AddProjectPopup = (props: Props) => {
         createProject({
             name, description, mail_client: clientMail, userId: props.userId
         })
+        props.showAddPopup(false)
     }
 
     return (
@@ -31,7 +32,7 @@ const AddProjectPopup = (props: Props) => {
                         </div>
                     </div>
                     <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                        <form>
+                        <div>
                             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                                 Project Information
                             </h6>
@@ -71,7 +72,7 @@ const AddProjectPopup = (props: Props) => {
                                     <button onClick={() => submit()} className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Save</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

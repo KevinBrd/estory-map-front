@@ -9,8 +9,6 @@ export type DeleteProjectDto = {
     id: number
 };
 
-export type UpdateProjectDto = Omit<Project, "userId">
-
 export type Actor = {
     id: number;
     nom_role: string;
@@ -56,14 +54,15 @@ export type CreateRegleDto = {
 };
 
 export type UpdateProjectDto = {
-    userId: number;
+    id: number;
+    userId: string;
     name?: string;
     description?: string;
     mail_client?: string;
-    actors?: Actor[];
-    fluxs?: Flux[];
-    regles?: RegleDeGestion[];
-    exigences?: Exigence[];
+    actors?: number[];
+    fluxs?: number[];
+    regles?: number[];
+    exigences?: number[];
 };
 
 export type Project = {
